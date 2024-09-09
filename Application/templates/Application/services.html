@@ -1,0 +1,88 @@
+{% extends "Application/index.html"%}
+
+{% block content %}
+{% load static %}
+<!-- service section -->
+<!-- Service Section -->
+<section class="service_section layout_padding">
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>Our Services</h2>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/report.png' %}" alt="Report Services" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>Report Services</h5>
+                        <p>We offer services to create comprehensive reports on various topics, including business, academic, or research-related subjects. Reports are crafted to present findings, analyses, and recommendations concisely and effectively.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/exam (2).png' %}" alt="Essay Services" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>Essay Services</h5>
+                        <p>We provide assistance in crafting essays for academic purposes, covering a wide range of topics and disciplines. These services ensure well-written, structured, and original essays tailored to meet student requirements.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/thesis.png' %}" alt="Dissertation Services" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>Dissertation Services</h5>
+                        <p>We create comprehensive dissertations, guiding students through the research process, literature review, methodology, analysis, and conclusion.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/cv.png' %}" alt="CV Writing" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>CV Writing</h5>
+                        <p>Professional resume writing services, crafting CVs tailored to individual career goals and aspirations.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/exam.png' %}" alt="Exam Revision Services" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>Exam Revision Services</h5>
+                        <p>We provide resources and support for exam preparation, including study guides, practice questions, and revision materials.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-md-4 mx-auto">
+                <div class="box">
+                    <div class="img-box">
+                        <img src="{% static 'images/research-paper.png' %}" alt="Research Paper Writing Service" />
+                    </div>
+                    <div class="detail-box">
+                        <h5>Research Paper Writing Service</h5>
+                        <p>We provide assistance in composing research papers on various subjects, ensuring thorough research, proper citation, and adherence to academic standards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="btn-box">
+            <a href="{% url 'App-pricing' %}">
+                CHECK OUT OUR PRICES
+            </a>
+        </div>
+    </div>
+</section>
+<!-- End Service Section -->
+{% endblock content %}

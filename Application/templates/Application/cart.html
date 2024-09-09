@@ -1,0 +1,114 @@
+{% extends "Application/index.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Tabs Navigation -->
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link{% if request.GET.tab != 'pending' and request.GET.tab != 'completed' %} active{% endif %}" id="cart-tab" data-bs-toggle="tab" href="#cart" role="tab" aria-controls="cart" aria-selected="{% if request.GET.tab != 'pending' and request.GET.tab != 'completed' %}true{% else %}false{% endif %}">My Cart</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link{% if request.GET.tab == 'pending' %} active{% endif %}" id="pending-tab" data-bs-toggle="tab" href="#pending" role="tab" aria-controls="pending" aria-selected="{% if request.GET.tab == 'pending' %}true{% else %}false{% endif %}">Pending</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link{% if request.GET.tab == 'completed' %} active{% endif %}" id="completed-tab" data-bs-toggle="tab" href="#completed" role="tab" aria-controls="completed" aria-selected="{% if request.GET.tab == 'completed' %}true{% else %}false{% endif %}">Completed</a>
+        </li>
+    </ul>
+
+    <!-- Tabs Content -->
+    <div class="tab-content mt-3" id="myTabContent">
+        <!-- My Cart Tab -->
+        <div class="tab-pane fade{% if request.GET.tab != 'pending' and request.GET.tab != 'completed' %} show active{% endif %}" id="cart" role="tabpanel" aria-labelledby="cart-tab">
+            <h2>My Cart</h2>
+            <form method="post" action="{% url 'update_order' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <ul class="list-group">
+                    {% for order in orders %}
+                        <li class="list-group-item">
+                            {{ order.word_count }} words of {{ order.service.name }} - ${{ order.total_price }}
+                            
+                            <!-- Order form fields -->
+                            <div class="mt-2">
+                                <label for="academic_level_{{ order.id }}">Academic Level:</label><br>
+                                {% for level in academic_levels %}
+                                    <input type="radio" id="academic_level_{{ level }}_{{ order.id }}" name="academic_level_{{ order.id }}" value="{{ level }}" {% if order.academic_level == level %}checked{% endif %}>
+                                    <label for="academic_level_{{ level }}_{{ order.id }}">{{ level }}</label>
+                                {% endfor %}
+                            </div>
+
+                            <div class="mt-2">
+                                <label for="type_of_paper_{{ order.id }}">Type of Paper:</label>
+                                <select id="type_of_paper_{{ order.id }}" name="type_of_paper_{{ order.id }}" class="form-control" onchange="toggleOtherType(this, {{ order.id }})">
+                                    <option value="Course Work" {% if order.type_of_paper == 'Course Work' %}selected{% endif %}>Course Work</option>
+                                    <option value="Research Paper" {% if order.type_of_paper == 'Research Paper' %}selected{% endif %}>Research Paper</option>
+                                    <option value="Essay (Any Type)" {% if order.type_of_paper == 'Essay (Any Type)' %}selected{% endif %}>Essay (Any Type)</option>
+                                    <option value="Discussion" {% if order.type_of_paper == 'Discussion' %}selected{% endif %}>Discussion</option>
+                                    <option value="Others" {% if order.type_of_paper == 'Others' %}selected{% endif %}>Others</option>
+                                </select>
+                                <textarea id="other_type_{{ order.id }}" name="other_type_{{ order.id }}" class="form-control mt-2" style="display: {% if order.type_of_paper == 'Others' %}block{% else %}none{% endif %};" placeholder="Please specify if 'Others' selected">{{ order.other_type }}</textarea>
+                            </div>
+
+                            <div class="mt-2">
+                                <label for="discipline_{{ order.id }}">Discipline:</label>
+                                <textarea id="discipline_{{ order.id }}" name="discipline_{{ order.id }}" class="form-control">{{ order.discipline }}</textarea>
+                            </div>
+
+                            <div class="mt-2">
+                                <label for="instructions_{{ order.id }}">Paper Instructions:</label>
+                                <textarea id="instructions_{{ order.id }}" name="instructions_{{ order.id }}" class="form-control">{{ order.instructions }}</textarea>
+                            </div>
+
+                            <div class="mt-2">
+                                <label for="additional_materials_{{ order.id }}">Additional Materials:</label>
+                                <input type="file" id="additional_materials_{{ order.id }}" name="additional_materials_{{ order.id }}" class="form-control">
+                            </div>
+
+                             <!-- Deadline -->
+                            <div class="mt-2">
+                                <label for="deadline_{{ order.id }}">Deadline:</label>
+                                <input type="datetime-local" id="deadline_{{ order.id }}" name="deadline_{{ order.id }}" class="form-control" value="{{ order.deadline|date:'Y-m-dTH:i' }}">
+                            </div>
+
+                            <input type="hidden" name="order_id" value="{{ order.id }}">
+                            <button type="submit" class="btn btn-primary mt-2">Update Order</button>
+                        </li>
+                    {% empty %}
+                        <li class="list-group-item">Your cart is empty.</li>
+                    {% endfor %}
+                </ul>
+                <p class="mt-2">Total: ${{ total_price }}</p>
+            </form>
+        </div>
+
+        <!-- Pending Tab -->
+        <div class="tab-pane fade{% if request.GET.tab == 'pending' %} show active{% endif %}" id="pending" role="tabpanel" aria-labelledby="pending-tab">
+            <h2>Pending Orders</h2>
+            <form method="post" action="{% url 'update_pending_order' %}">
+                {% csrf_token %}
+                <label for="completion_date">Specify Completion Date:</label>
+                <input type="date" id="completion_date" name="completion_date" class="form-control">
+                <input type="hidden" name="order_id" value="{{ order.id }}"> <!-- Ensure order_id is sent if updating a specific order -->
+                <button type="submit" class="btn btn-primary mt-2">Save Completion Date</button>
+            </form>
+        </div>
+
+        <!-- Completed Tab -->
+        <div class="tab-pane fade{% if request.GET.tab == 'completed' %} show active{% endif %}" id="completed" role="tabpanel" aria-labelledby="completed-tab">
+            <h2>Completed Orders</h2>
+            <!-- Display completed orders here -->
+        </div>
+    </div>
+</div>
+
+<script>
+function toggleOtherType(selectElement, orderId) {
+    var otherTypeField = document.getElementById('other_type_' + orderId);
+    if (selectElement.value === 'Others') {
+        otherTypeField.style.display = 'block';
+    } else {
+        otherTypeField.style.display = 'none';
+    }
+}
+</script>
+{% endblock content %}

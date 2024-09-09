@@ -1,0 +1,27 @@
+{% extends "Application/index.html"%}
+
+{% block content%}
+{% load static %}
+<!-- Slider section -->
+<section class="slider_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="detail-box">
+                    <h1>Exceptional Essay Writing <br> & <br> Academic Help</h1>
+                    <p>
+                        Welcome to Academic Assist Georgia, your premier destination for academic support in Georgia. Our mission is to provide students with top-notch academic assistance tailored to their needs, ensuring academic success and growth.
+                    </p>
+                    <a href="{% url 'App-contact' %}">Contact Us</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="img-box">
+                    <img src="{% static 'images/b.jpg' %}">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End slider section -->
+{% endblock content %}
